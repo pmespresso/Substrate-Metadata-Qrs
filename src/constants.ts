@@ -1,0 +1,1 @@
+export const AUTHORITY = 'GWXnVMKe9uzDAktgkZM2WSc1uJ53dgCn74EaDBz2Kdpzoqg'; // 

@@ -1,25 +1,21 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Container from 'react-bootstrap/Container';
+import Jumbotron from 'react-bootstrap/Jumbotron';
+
+import { CustomEndpoint } from './screens/CustomEndpoint';
+import { QrList } from './screens/QrList';
 
 const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container>
+      <Jumbotron>
+        <h1>Parity Signer Metadata Qrs</h1>
+        <p className='lead'>Easy UI for generating QRs with calls only metadata.</p>
+        <p>If you don't see a network you'd like to inject types for, enter a valid websocket endpoint and we will generate it for you. </p>
+      </Jumbotron>
+      <CustomEndpoint />
+      <QrList />
+    </Container>
   );
 }
 
