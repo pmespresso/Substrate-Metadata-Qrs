@@ -11,7 +11,7 @@ export function CustomEndpoint() {
   const [isEndpointValid, setIsEndpointValid] = useState(false);
 
   const handleEndpointChange = ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
-    if (value.substr(0, 6) === 'wss://') {
+    if (value.substr(0, 6) === 'wss://' || value.substr(0, 5) === 'ws://') {
       setIsEndpointValid(true);
     } else {
       setIsEndpointValid(false);
@@ -29,7 +29,18 @@ export function CustomEndpoint() {
     ]);
   
     // output the chain info, for easy re-use
-    console.error(`// Generated via 'yarn run chain:info ${endpoint}'\n\nexport default {\n  chain: '${chain.toString()}',\n  genesisHash: '${api.genesisHash.toHex()}',\n  specVersion: ${api.runtimeVersion.specVersion.toNumber()},\n  ss58Format: ${props.ss58Format.unwrapOr(42)},\n  tokenDecimals: ${props.tokenDecimals.unwrapOr(0)},\n  tokenSymbol: '${props.tokenSymbol.unwrapOr('UNIT')}',\n  metaCalls: '${Buffer.from(api.runtimeMetadata.asCallsOnly.toU8a()).toString('base64')}'\n};`);
+    console.error(`
+    // Generated via 'yarn run chain:info ${endpoint}'
+      \n
+      \n export default {
+      \n  chain: '${chain.toString()}',
+      \n  genesisHash: '${api.genesisHash.toHex()}',
+      \n  specVersion: ${api.runtimeVersion.specVersion.toNumber()},
+      \n  ss58Format: ${props.ss58Format.unwrapOr(42)},
+      \n  tokenDecimals: ${props.tokenDecimals.unwrapOr(0)},
+      \n  tokenSymbol: '${props.tokenSymbol.unwrapOr('UNIT')}',
+      \n  metaCalls: '${Buffer.from(api.runtimeMetadata.asCallsOnly.toU8a()).toString('base64')}'
+      \n};`);
   
     // show any missing types
     api.runtimeMetadata.getUniqTypes(false);

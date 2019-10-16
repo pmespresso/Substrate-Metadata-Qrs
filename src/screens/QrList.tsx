@@ -12,7 +12,24 @@ export function QrList() {
   const [openNetwork, setOpenNetwork] = useState();
 
   const handleShowQr = ({ currentTarget: { dataset: { id } } }: React.MouseEvent<HTMLElement>) => {
-    setOpenNetwork(id);
+    if (openNetwork === id) {
+      setOpenNetwork(-1);
+    } else {
+      setOpenNetwork(id);
+    }
+  }
+
+  const renderQr = (network: any) => {
+    return (
+      <div style={{ height: '600' }}>
+        <QrDisplayPayload
+          address={AUTHORITY}
+          cmd={3} // sign a message
+          payload={new Bytes(network.metaCalls)}
+          size={500}
+        />
+      </div>
+    )
   }
 
   return (
@@ -27,16 +44,7 @@ export function QrList() {
                 </div>
                 {
                   openNetwork === network.chain
-                    && (
-                      <div style={{ height: '400' }}>
-                        <QrDisplayPayload
-                          address={AUTHORITY}
-                          cmd={3} // sign a message
-                          payload={new Bytes(network.metaCalls)}
-                          size={300}
-                        />
-                      </div>
-                    )   
+                    && renderQr(network)
                 }
               </ListGroup.Item>
         ))

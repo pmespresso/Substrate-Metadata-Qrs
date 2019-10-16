@@ -4,6 +4,7 @@ import Jumbotron from 'react-bootstrap/Jumbotron';
 
 import { CustomEndpoint } from './screens/CustomEndpoint';
 import { QrList } from './screens/QrList';
+import { Search } from './screens/Search';
 
 const App: React.FC = () => {
   return (
@@ -13,7 +14,10 @@ const App: React.FC = () => {
         <p className='lead'>Easy UI for generating QRs with calls only metadata.</p>
         <p>If you don't see a network you'd like to inject types for, enter a valid websocket endpoint and we will generate it for you. </p>
       </Jumbotron>
-      <CustomEndpoint />
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Search />
+        <CustomEndpoint />
+      </div>
       <QrList />
     </Container>
   );
