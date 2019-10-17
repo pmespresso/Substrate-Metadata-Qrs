@@ -1,4 +1,4 @@
-# Metadata Qrs
+# Metadata Qrs https://metadata-qrs.herokuapp.com/
 
 #### Purpose: As Parity Signer now has support for Substrate based chains including Kusama and Polkadot, we will need to cater for decoding their respective payloads appropriately.
 

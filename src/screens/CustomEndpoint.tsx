@@ -2,21 +2,21 @@
 import { ApiPromise, WsProvider } from '@polkadot/api/index';
 import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import FormControl from 'react-bootstrap/FormControl';
-import InputGroup from 'react-bootstrap/InputGroup';
 
-export function CustomEndpoint() {
+import { DEFAULT_LOCAL } from '../constants';
+import { Payload } from '../types';
+
+interface Props {
+  onChangePayload: (payload: Payload) => void;
+}
+
+export function CustomEndpoint(props: Props) {
+  const { onChangePayload } = props;
   const [endpoint, setEndpoint] = useState();
-  const [isEndpointValid, setIsEndpointValid] = useState(false);
+  const [error, setError] = useState();
+  const [loading, setLoading] = useState(false);
 
   const handleEndpointChange = ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
-    if (value.substr(0, 6) === 'wss://' || value.substr(0, 5) === 'ws://') {
-      setIsEndpointValid(true);
-    } else {
-      setIsEndpointValid(false);
-    }
-
     setEndpoint(value);
   }
 
@@ -27,6 +27,18 @@ export function CustomEndpoint() {
       api.rpc.system.chain(),
       api.rpc.system.properties()
     ]);
+
+    const payload = {
+      chain: chain.toString(),
+      endpoint,
+      genesisHash: api.genesisHash.toHex(),
+      specVersion: api.runtimeVersion.specVersion.toNumber(),
+      ss58Format: props.ss58Format.unwrapOr(42),
+      tokenDecimals: props.tokenDecimals.unwrapOr(0),
+      metaCalls: Buffer.from(api.runtimeMetadata.asCallsOnly.toU8a()).toString('base64')
+    }
+
+    onChangePayload(payload);
   
     // output the chain info, for easy re-use
     console.error(`
@@ -47,18 +59,20 @@ export function CustomEndpoint() {
   }
 
   return (
-    <Form>
-      <InputGroup className="mb-3">
-        <FormControl
-          aria-describedby="basic-addon3"
-          isValid={isEndpointValid}
-          onChange={handleEndpointChange}
-          placeholder="Enter Custom RPC Endpoint here, for example: wss://kusama-rpc.polkadot.io" />
-      
-        <Button disabled={!isEndpointValid} onClick={handleGetEndpointMeta} variant="primary">
-          Submit
-        </Button>
-      </InputGroup>
-    </Form>
+    <div style={{ width: '100%' }}>
+      <input
+        onChange={handleEndpointChange}
+        value={endpoint}
+        placeholder="Enter Custom RPC Endpoint here, for example: wss://kusama-rpc.polkadot.io" />
+    
+      <Button onClick={handleGetEndpointMeta} variant="warning">
+        Submit
+      </Button>
+      <div style={{ display: 'flex', margin: 10, padding: 10, justifyContent: 'space-between' }}>
+        <label>Preset Endpoints: </label>
+        <Button onClick={() => setEndpoint(DEFAULT_LOCAL)} variant="secondary">localhost:9944</Button>
+      </div>
+      {error}
+    </div>
   );
 }
