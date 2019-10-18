@@ -4,14 +4,14 @@ import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 
 import { DEFAULT_LOCAL } from '../constants';
-import { Payload } from '../types';
+import { MetaInfo } from '../types';
 
 interface Props {
-  onChangePayload: (payload: Payload) => void;
+  onChangeMetaInfo: (metaInfo: MetaInfo) => void;
 }
 
 export function CustomEndpoint(props: Props) {
-  const { onChangePayload } = props;
+  const { onChangeMetaInfo } = props;
   const [endpoint, setEndpoint] = useState();
   const [error, setError] = useState();
   const [loading, setLoading] = useState(false);
@@ -28,7 +28,7 @@ export function CustomEndpoint(props: Props) {
       api.rpc.system.properties()
     ]);
 
-    const payload = {
+    const metaInfo = {
       chain: chain.toString(),
       endpoint,
       genesisHash: api.genesisHash.toHex(),
@@ -38,7 +38,7 @@ export function CustomEndpoint(props: Props) {
       metaCalls: Buffer.from(api.runtimeMetadata.asCallsOnly.toU8a()).toString('base64')
     }
 
-    onChangePayload(payload);
+    onChangeMetaInfo(metaInfo);
   
     // output the chain info, for easy re-use
     console.error(`

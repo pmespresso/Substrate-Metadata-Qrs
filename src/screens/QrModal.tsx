@@ -6,29 +6,29 @@ import Modal from 'react-bootstrap/Modal';
 
 import { AUTHORITY } from '../constants';
 import { CustomEndpoint } from './CustomEndpoint';
-import { Payload } from '../types';
+import { MetaInfo } from '../types';
 
 interface Props {
   onClose: () => void,
   onShow: () => void,
-  payload?: Payload,
+  metaInfo?: MetaInfo,
   show: boolean
 }
 
 export function QrModal(props: Props) {
   const { onClose, show } = props;
-  const [payload, setPayload] = useState<Payload>();
+  const [metaInfo, setMetaInfo] = useState<MetaInfo>();
 
   useEffect(() => {
-    setPayload(props.payload);
+    setMetaInfo(props.metaInfo);
   }, [props])
 
-  const handleOnChangePayload = (payload: Payload) => {
-    setPayload(payload);
+  const handleOnChangePayload = (metaInfo: MetaInfo) => {
+    setMetaInfo(metaInfo);
   }
 
   const handleClose = () => {
-    setPayload(undefined);
+    setMetaInfo(undefined);
     onClose();
   }
 
@@ -36,20 +36,20 @@ export function QrModal(props: Props) {
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
         {
-          payload
-            ? <Modal.Title>Metadata QR for {payload.chain}, v{payload.specVersion} from {payload.endpoint}...</Modal.Title>
-            : <CustomEndpoint onChangePayload={handleOnChangePayload} />
+          metaInfo
+            ? <Modal.Title>Metadata QR for {metaInfo.chain}, v{metaInfo.specVersion} from {metaInfo.endpoint}...</Modal.Title>
+            : <CustomEndpoint onChangeMetaInfo={handleOnChangePayload} />
         }
       </Modal.Header>
       <React.Fragment>
         <Modal.Body>
           {
-            payload
+            metaInfo
               ? (
                 <QrDisplayPayload
                   address={AUTHORITY}
                   cmd={3} // sign message
-                  payload={new Bytes(payload.metaCalls)}
+                  payload={new Bytes(metaInfo.metaCalls)}
                   size={400}
                 />
               ) : (

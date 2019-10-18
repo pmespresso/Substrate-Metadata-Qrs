@@ -1,6 +1,6 @@
 import { u8 } from '@polkadot/types';
 
-export interface Payload {
+export interface MetaInfo {
   chain: string,
   endpoint: string,
   genesisHash: string,
@@ -9,3 +9,5 @@ export interface Payload {
   tokenDecimals: number | u8,
   metaCalls: string
 }
+
+export type MetaInfoList = Array<MetaInfo>;
