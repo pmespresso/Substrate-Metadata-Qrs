@@ -8,10 +8,11 @@ import { MetaInfo } from '../types';
 
 interface Props {
   onChangeMetaInfo: (metaInfo: MetaInfo) => void;
+  onLoading: () => void;
 }
 
 export function CustomEndpoint(props: Props) {
-  const { onChangeMetaInfo } = props;
+  const { onChangeMetaInfo, onLoading } = props;
   const [endpoint, setEndpoint] = useState();
   const [error, setError] = useState();
   const [loading, setLoading] = useState(false);
@@ -21,6 +22,8 @@ export function CustomEndpoint(props: Props) {
   }
 
   const handleGetEndpointMeta = async () => {
+    onLoading();
+
     const provider = new WsProvider(endpoint);
     const api = await ApiPromise.create({ provider });
     const [chain, props] = await Promise.all([
@@ -60,19 +63,20 @@ export function CustomEndpoint(props: Props) {
 
   return (
     <div style={{ width: '100%' }}>
-      <input
-        onChange={handleEndpointChange}
-        value={endpoint}
-        placeholder="Enter Custom RPC Endpoint here, for example: wss://kusama-rpc.polkadot.io" />
-    
-      <Button onClick={handleGetEndpointMeta} variant="warning">
-        Submit
-      </Button>
-      <div style={{ display: 'flex', margin: 10, padding: 10, justifyContent: 'space-between' }}>
-        <label>Preset Endpoints: </label>
-        <Button onClick={() => setEndpoint(DEFAULT_LOCAL)} variant="secondary">localhost:9944</Button>
+      <div style={{ width: '100%' }}>
+        <input
+          onChange={handleEndpointChange}
+          value={endpoint}
+          placeholder="Enter Custom RPC Endpoint here, for example: wss://kusama-rpc.polkadot.io"
+          style={{ width: '100%' }} />
       </div>
-      {error}
+      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <Button onClick={() => setEndpoint(DEFAULT_LOCAL)} variant="secondary">localhost:9944</Button>
+        <Button onClick={handleGetEndpointMeta} variant="primary">
+          Submit
+        </Button>
+        {error}
+      </div>
     </div>
   );
 }

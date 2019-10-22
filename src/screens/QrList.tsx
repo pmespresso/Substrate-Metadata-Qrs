@@ -8,29 +8,26 @@ import { AppContext } from '../contexts/AppContext';
 import { MetaInfo } from '../types';
 
 interface Props {
-  onSetPayload: (payload: MetaInfo) => void,
+  onSetMetaInfo: (metaInfo: MetaInfo) => void,
 }
 
 export function QrList(props: Props) {
   const { metaInfoList } = useContext(AppContext);
 
-  console.log(metaInfoList);
-
   const handleShowQr = ({ currentTarget: { dataset: { id } } }: React.MouseEvent<HTMLButtonElement>) => {
-    // @ts-ignore
-    const payload = NETWORKS[id];
-    props.onSetPayload(payload);
+    const metaInfo = metaInfoList.find(metaInfo => metaInfo.chain === id!);
+    props.onSetMetaInfo(metaInfo!);
   }
 
   return (
     <ListGroup>
       {
-        Object.values(metaInfoList).map((network, index) => (
-          <ListGroup.Item key={index} style={{ padding: 30 }}>
+        metaInfoList.map(metaInfo => (
+          <ListGroup.Item style={{ padding: 30 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <h3>{network.chain}</h3>
-              <p>{network.endpoint}</p>
-              <Button onClick={handleShowQr} data-id={network.chain}>Show Qr</Button>
+              <h3>{metaInfo.chain}</h3>
+              <p>{metaInfo.endpoint}</p>
+              <Button onClick={handleShowQr} data-id={metaInfo.chain}>Show Qr</Button>
             </div>
           </ListGroup.Item>
         ))

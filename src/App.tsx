@@ -17,7 +17,7 @@ const App: React.FC = () => {
     handleShow();
   }
 
-  const handleSetPayload = (metaInfo: MetaInfo) => {
+  const handleSetMetaInfo = (metaInfo: MetaInfo) => {
     setMetaInfo(metaInfo);
     handleShow();
   }
@@ -43,7 +43,7 @@ const App: React.FC = () => {
               <Search />
               <Button onClick={handleCustomEndpoint} variant='info'>Use Custom Endpoint</Button>
             </div>
-            <QrList onSetPayload={handleSetPayload}/>
+            <QrList onSetMetaInfo={handleSetMetaInfo} />
             <QrModal onClose={handleClose} onShow={handleShow} metaInfo={metaInfo} show={showQrModal} />
           </Container>
           )

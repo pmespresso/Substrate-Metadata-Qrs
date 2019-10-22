@@ -3,6 +3,7 @@ import { Bytes } from '@polkadot/types';
 import React, { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import Spinner from 'react-bootstrap/Spinner';
 
 import { AUTHORITY } from '../constants';
 import { CustomEndpoint } from './CustomEndpoint';
@@ -18,18 +19,25 @@ interface Props {
 export function QrModal(props: Props) {
   const { onClose, show } = props;
   const [metaInfo, setMetaInfo] = useState<MetaInfo>();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    console.log(props.metaInfo);
     setMetaInfo(props.metaInfo);
   }, [props])
 
-  const handleOnChangePayload = (metaInfo: MetaInfo) => {
+  const handleOnChangeMeta = (metaInfo: MetaInfo) => {
     setMetaInfo(metaInfo);
+    setLoading(false);
   }
 
   const handleClose = () => {
     setMetaInfo(undefined);
     onClose();
+  }
+
+  const handleOnLoading = () => {
+    setLoading(true);
   }
 
   return (
@@ -38,7 +46,7 @@ export function QrModal(props: Props) {
         {
           metaInfo
             ? <Modal.Title>Metadata QR for {metaInfo.chain}, v{metaInfo.specVersion} from {metaInfo.endpoint}...</Modal.Title>
-            : <CustomEndpoint onChangeMetaInfo={handleOnChangePayload} />
+            : <CustomEndpoint onChangeMetaInfo={handleOnChangeMeta} onLoading={handleOnLoading} />
         }
       </Modal.Header>
       <React.Fragment>
@@ -52,9 +60,10 @@ export function QrModal(props: Props) {
                   payload={new Bytes(metaInfo.metaCalls)}
                   size={400}
                 />
-              ) : (
-                'enter the ws endpoint above.'
               )
+              : loading
+                  ? <Spinner animation="grow" />
+                  : null
           }
         </Modal.Body>
         <Modal.Footer>
